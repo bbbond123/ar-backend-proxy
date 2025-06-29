@@ -1,0 +1,60 @@
+
+# 前端服务 - dev.ifoodme.com
+server {
+    listen       80;
+  #  listen 443 ssl http2;
+    listen [::]:80;
+    server_name  www.ifoodme.com;
+    root  /opt/homebrew/var/www;
+
+#    ssl_certificate /etc/letsencrypt/live/dev.ifoodme.com/fullchain.pem;
+#    ssl_certificate_key /etc/letsencrypt/live/dev.ifoodme.com/privkey.pem;
+#    ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+#    ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+#    ssl_prefer_server_ciphers on;
+#    ssl_session_tickets on;
+#    ssl_session_cache shared:SSL:10m;
+#    ssl_session_timeout 10m;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+# API 服务 - api.dev.ifoodme.com
+server {
+    listen       80;
+ #   listen 443 ssl http2;
+    listen [::]:80;
+    server_name  api.ifoodme.com;
+    index index.php index.html index.htm default.php default.htm default.html;
+
+#    ssl_certificate /etc/letsencrypt/live/apidev.ifoodme.com/fullchain.pem;
+#    ssl_certificate_key /etc/letsencrypt/live/apidev.ifoodme.com/privkey.pem;
+
+    location / {
+   	try_files $uri $uri/ /index.html;
+        proxy_pass http://localhost:48081;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-Port $remote_port;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header REMOTE-HOST $remote_addr;
+      
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 600s;
+        proxy_read_timeout 600s;
+        proxy_http_version 1.1;
+       # proxy_set_header Upgrade $http_upgrade;
+       # proxy_set_header Connection $connection_upgrade;
+       # proxy_set_header Host $host;
+       # proxy_set_header X-Real-IP $remote_addr;
+       # proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}

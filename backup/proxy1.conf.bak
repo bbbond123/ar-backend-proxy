@@ -1,0 +1,48 @@
+
+# 前端服务 - dev.ifoodme.com
+#server {
+#    listen       443 ssl;
+#    server_name  dev.ifoodme.com;
+
+    # SSL 配置
+#    ssl_certificate      /etc/letsencrypt/live/dev.ifoodme.com/fullchain.pem;  # 替换为你的证书路径
+#    ssl_certificate_key  /etc/letsencrypt/live/dev.ifoodme.com/privkey.pem;    # 替换为你的私钥路径
+    # 自签名证书示例：
+    # ssl_certificate      /opt/homebrew/etc/nginx/ssl/selfsigned.crt;
+#    # ssl_certificate_key  /opt/homebrew/etc/nginx/ssl/selfsigned.key;
+#
+#    location / {
+#        proxy_pass http://localhost:8000;
+#        proxy_set_header Host $host;
+#        proxy_set_header X-Real-IP $remote_addr;
+#        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#        proxy_set_header X-Forwarded-Proto $scheme;  # 确保后端知道是 HTTPS
+#    }
+#}
+
+# API 服务 - api.dev.ifoodme.com
+#server {
+#    listen       443 ssl;
+#    server_name  api.dev.ifoodme.com;
+#
+#    # SSL 配置（与上面共用同一个证书，因为是同一个域名下的子域）
+#    ssl_certificate      /etc/letsencrypt/live/dev.ifoodme.com/fullchain.pem;
+#    ssl_certificate_key  /etc/letsencrypt/live/dev.ifoodme.com/privkey.pem;
+#
+#    location / {
+#        proxy_pass http://localhost:48081;
+#        proxy_set_header Host $host;
+#        proxy_set_header X-Real-IP $remote_addr;
+#        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#        proxy_set_header X-Forwarded-Proto $scheme;
+#    }
+#}
+
+
+# 可选：将 HTTP 重定向到 HTTPS
+#server {
+#    listen       80;
+#    server_name  dev.ifoodme.com api.dev.ifoodme.com;
+#    return 301 https://$host$request_uri;
+#}
+

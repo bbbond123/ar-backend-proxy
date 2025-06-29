@@ -1,0 +1,48 @@
+
+server {
+    listen 80;
+    server_name www.ifoodme.com;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name www.ifoodme.com;
+
+    ssl_certificate /etc/letsencrypt/live/www.ifoodme.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.ifoodme.com/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    root /opt/homebrew/var/www/ifoodme;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;   # ⚡Vue前端需要这个！！重要！！
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:48081/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+# [2] api.ifoodme.com -> API反向代理
+server {
+    listen 80;
+    server_name api.ifoodme.com;
+     
+    index index.html;
+    
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
